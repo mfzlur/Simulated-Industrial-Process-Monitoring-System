@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .city-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 15px;
+            width: 30%; /* Adjust width for three columns */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+        .city-card h2 {
+            color: #333;
+        }
+        .city-card p {
+            color: #666;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather Dashboard</h1>
+    <div class="container">
+        {% if weather_data %}
+            {% for city, data in weather_data.items() %}
+                <div class="city-card">
+                    <h2>{{ city }}</h2>
+                    {% if 'cod' in data and data['cod'] == '200' %}
+                        <h3>Forecast:</h3>
+                        {% for forecast in data['list'] %}
+                            <p><strong>Date/Time:</strong> {{ forecast['dt'] }}</p>
+                            <p><strong>Temperature:</strong> {{ forecast['main']['temp'] - 273.15 }} °C</p>
+                            <p><strong>Feels Like:</strong> {{ forecast['main']['feels_like'] - 273.15 }} °C</p>
+                            <p><strong>Min Temp:</strong> {{ forecast['main']['temp_min'] - 273.15 }} °C</p>
+                            <p><strong>Max Temp:</strong> {{ forecast['main']['temp_max'] - 273.15 }} °C</p>
+                            <p><strong>Pressure:</strong> {{ forecast['main']['pressure']}}</p>
+                            <p><strong>Sea Level:</strong> {{ forecast['main']['sea_level']}}</p>
+                            <p><strong>Ground Level:</strong> {{ forecast['main']['grnd_level']}}</p>
+                            <p><strong>Humidity:</strong> {{ forecast['main']['humidity']}}</p>
+                            <p><strong>Description:</strong> {{ forecast['weather'][0]['description'] }}</p>
+                            <hr>
+                        {% endfor %}
+                    {% else %}
+                        <p class="error">Error: Could not retrieve weather data for {{ city }}.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
